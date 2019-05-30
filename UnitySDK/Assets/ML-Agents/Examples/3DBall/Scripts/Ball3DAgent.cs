@@ -8,10 +8,17 @@ public class Ball3DAgent : Agent
     [Header("Specific to Ball3D")]
     public GameObject ball;
     private Rigidbody ballRb;
+    public int Mass;
+    private Academy academy;
+    public float Scale;
 
     public override void InitializeAgent()
     {
         ballRb = ball.GetComponent<Rigidbody>();
+        academy = Object.FindObjectOfType<Academy>() as Academy;
+        ballRb.mass = academy.resetParameters["Mass"];
+        Scale = academy.resetParameters["Scale"];
+        ball.transform.localScale = new Vector3(Scale, Scale, Scale);
     }
 
     public override void CollectObservations()
@@ -20,6 +27,9 @@ public class Ball3DAgent : Agent
         AddVectorObs(gameObject.transform.rotation.x);
         AddVectorObs(ball.transform.position - gameObject.transform.position);
         AddVectorObs(ballRb.velocity);
+
+        //gameObject.transform.localScale += new Vector3(0, 0, 0.1f);
+
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
@@ -64,6 +74,10 @@ public class Ball3DAgent : Agent
         ball.transform.position = new Vector3(Random.Range(-1.5f, 1.5f), 4f, Random.Range(-1.5f, 1.5f))
                                       + gameObject.transform.position;
 
+
+        ballRb.mass = academy.resetParameters["Mass"];
+        Scale = academy.resetParameters["Scale"];
+        ball.transform.localScale = new Vector3(Scale, Scale, Scale);
     }
 
 }
